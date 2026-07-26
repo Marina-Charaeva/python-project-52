@@ -7,8 +7,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
 
 # Устанавливаем зависимости
-pip install --upgrade pip
-pip install django-bootstrap5 django django-environ dj-database-url gunicorn psycopg2-binary whitenoise
+ppip install --upgrade pip
+pip install -r requirements.txt
+
+mkdir -p staticfiles
+
 # Собираем статику
 python manage.py collectstatic --noinput
 
