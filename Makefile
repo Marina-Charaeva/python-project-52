@@ -1,4 +1,4 @@
-.PHONY: install migrate collectstatic build render-start
+.PHONY: build render-start
 
 install:
 	uv sync
