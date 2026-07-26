@@ -14,4 +14,5 @@ dependencies = [
     "gunicorn>=26.0.0",
     "psycopg2-binary>=2.9.12",
     "whitenoise>=6.5.0",
+    "django-bootstrap5>=23.4.0",
 ]
