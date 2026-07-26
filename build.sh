@@ -7,7 +7,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
 
 # Устанавливаем зависимости
-ppip install --upgrade pip
+pip install --upgrade pip
 pip install -r requirements.txt
 
 mkdir -p staticfiles
