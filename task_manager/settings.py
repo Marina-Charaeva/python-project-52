@@ -5,15 +5,18 @@ import dj_database_url
 
 # Инициализация environ
 env = environ.Env()
-env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env('SECRET_KEY', default='django-insecure-default-key-for-dev')
+SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['webserver', 'localhost', '127.0.0.1', '.onrender.com']
+
+ALLOWED_HOSTS = [
+    'hexlet-code-nrjr.onrender.com',
+    '.onrender.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -61,7 +64,6 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 if os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
             conn_max_age=600,
             ssl_require=True
         )
