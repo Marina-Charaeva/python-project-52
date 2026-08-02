@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Менеджер задач{% endblock %}</title>
+    <title>{% block title %}{% trans "Task Manager" %}{% endblock %}</title>
     
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -44,13 +44,13 @@
     <!-- Навигационная панель -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">            
-            <a class="navbar-brand" href="{% url 'index' %}">Менеджер задач</a>       
+            <a class="navbar-brand" href="{% url 'index' %}">{% trans "Task Manager" %}</a>       
             <!-- Навигационное меню -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <!-- Пользователи -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
+                        <a class="nav-link" href="{% url 'users' %}">{% trans "Users" %}</a>
                     </li>
                     
                     <!-- Вход/Выход и Регистрация -->
@@ -61,15 +61,15 @@
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn-logout nav-link">Выход</button>
+                                <button type="submit" class="btn-logout nav-link">{% trans "Logout" %}</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                            <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
+                            <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -94,7 +94,7 @@
 
     <footer class="footer">
         <div class="container text-center">
-            <span class="text-muted">© 2026 Менеджер задач.</span>
+            <span class="text-muted">© 2026 {% trans "Task Manager" %}</span>
         </div>
     </footer>
 </body>
