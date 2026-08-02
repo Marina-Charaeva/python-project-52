@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load django_bootstrap5 %}
 
 <!DOCTYPE html>
@@ -27,51 +28,48 @@
         }
         .container {
             flex: 1;
+        }    
+        .navbar-nav {
+            flex-direction: row;
+        }
+        .navbar-nav .nav-item {
+            margin-right: 1rem;
+        }
+        .navbar-nav .nav-item:last-child {
+            margin-right: 0;
         }
     </style>
 </head>
 <body>
     <!-- Навигационная панель -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Менеджер задач - это бренд и ссылка на главную -->
-            <a class="navbar-brand" href="{% url 'index' %}">Менеджер задач</a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
+        <div class="container">            
+            <a class="navbar-brand" href="{% url 'index' %}">Менеджер задач</a>       
+            <!-- Навигационное меню -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <!-- Только 4 пункта меню -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Менеджер задач</a>
-                    </li>
+                <ul class="navbar-nav">
+                    <!-- Пользователи -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users' %}">Пользователи</a>
                     </li>
                     
-                    <!-- Ссылки для неавторизованных пользователей -->
-                    {% if not user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Вход</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
-                        </li>
-                    {% endif %}
-                </ul>
-                
-                <ul class="navbar-nav">
+                    <!-- Вход/Выход и Регистрация -->
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <span class="nav-link">{{ user.username }}</span>
                         </li>
                         <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}">
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-light btn-sm">Выход</button>
+                                <button type="submit" class="btn-logout nav-link">Выход</button>
                             </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -81,7 +79,6 @@
 
     <!-- Основной контент -->
     <main class="container mt-4">
-        <!-- Flash сообщения -->
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -95,7 +92,6 @@
         {% endblock %}
     </main>
 
-    <!-- Подвал -->
     <footer class="footer">
         <div class="container text-center">
             <span class="text-muted">© 2026 Менеджер задач.</span>
