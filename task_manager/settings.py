@@ -101,17 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # i18n
-LANGUAGE_CODE = 'en-us'  # ← ЯЗЫК ПО УМОЛЧАНИЮ (АНГЛИЙСКИЙ)
+LANGUAGE_CODE = 'ru'
+
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
-
-# Доступные языки
-LANGUAGES = [
-    ('en', 'English'),
-    ('ru', 'Русский'),
-]
 
 # Путь к файлам переводов
 LOCALE_PATHS = [
