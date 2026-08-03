@@ -32,7 +32,7 @@ msgstr "Пользователи"
 
 #: task_manager/templates/base.html:64
 msgid "Logout"
-msgstr ""Выход"
+msgstr "Выход"
 
 #: task_manager/templates/base.html:69
 msgid "Login"
