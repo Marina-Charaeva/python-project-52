@@ -102,10 +102,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # i18n
 LANGUAGE_CODE = 'ru'
-
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
+
+# Доступные языки
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en', 'English'),
+]
 
 # Путь к файлам переводов
 LOCALE_PATHS = [
