@@ -1,21 +1,21 @@
-.PHONY: build render-start
+
+.PHONY: install migrate collectstatic build start render-start
 
 install:
-	uv sync
+	poetry install
 
 migrate:
-	poetry run python manage.py makemigrations
 	poetry run python manage.py migrate
 
-PORT ?= 8000
-start:
-	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) task_manager.wsgi
 collectstatic:
-	uv run python manage.py collectstatic --noinput
+	poetry run python manage.py collectstatic --noinput
 
 build:
 	./build.sh
 
+start:
+	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) task_manager.wsgi:application
+
 render-start:
-	python manage.py migrate
-	gunicorn task_manager.wsgi:application
+	poetry run python manage.py migrate
+	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) task_manager.wsgi:application
