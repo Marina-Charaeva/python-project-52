@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse_lazy
+from .forms import CustomAuthenticationForm, CustomUserCreationForm
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -15,15 +16,30 @@ class UserListView(ListView):
     context_object_name = 'users'
     ordering = ['id']
 
-class UserCreateView(CreateView):
-    form_class = UserCreationForm
-    template_name = 'registration/register.html'
+class UserCreateView(SuccessMessageMixin, CreateView):
+    model = User
+    form_class = CustomUserCreationForm
+    template_name = 'users/create.html'
     success_url = reverse_lazy('login')
+    success_message = 'Пользователь успешно зарегистрирован'
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, 'Пользователь успешно зарегистрирован')
-        return response
+class UserLoginView(View):
+    template_name = 'users/login.html'
+    
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        form = CustomAuthenticationForm()  # ← ИСПОЛЬЗУЕМ КАСТОМНУЮ ФОРМУ
+        return render(request, self.template_name, {'form': form})
+    
+    def post(self, request):
+        form = CustomAuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, 'Вы залогинены')
+            return redirect('index')
+        return render(request, self.template_name, {'form': form})
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
