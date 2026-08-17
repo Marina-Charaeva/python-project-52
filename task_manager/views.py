@@ -4,7 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, T
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .forms import CustomAuthenticationForm, CustomUserCreationForm
@@ -16,7 +16,7 @@ class IndexView(TemplateView):
 
 class UserListView(ListView):
     model = User
-    template_name = 'users.html'
+    template_name = 'users/users.html'
     context_object_name = 'users'
     ordering = ['id']
 
@@ -47,40 +47,42 @@ class UserLoginView(View):
             return redirect('index')
         return render(request, self.template_name, {'form': form})
 
+class UserLogoutView(View):
+    def post(self, request):
+        logout(request)
+        messages.info(request, 'Вы разлогинены')
+        return redirect('index')
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)):
     model = User
     fields = ['first_name', 'last_name', 'username']
-    template_name = 'users/user_form.html'
+    template_name = 'users/update.html'
     success_url = reverse_lazy('users')
+    success_message = 'Пользователь успешно изменен'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         # Разрешаем редактировать только себя
         if self.object.pk != request.user.pk:
-            messages.error(request, 'У вас нет прав для изменения этого пользователя')
+            messages.error(request, 'У вас нет прав для изменения другого пользователя')
             return redirect('users')
         return super().dispatch(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        messages.success(self.request, 'Пользователь успешно изменен')
-        return super().form_valid(form)
-
-
-class UserDeleteView(LoginRequiredMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = User
-    template_name = 'users/user_confirm_delete.html'
+    template_name = 'users/delete.html'
     success_url = reverse_lazy('users')
+    success_message = 'Пользователь успешно удален'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         # Разрешаем удалять только себя
         if self.object.pk != request.user.pk:
-            messages.error(request, 'У вас нет прав для удаления этого пользователя')
+            messages.error(request, 'У вас нет прав для удаления другого пользователя')
             return redirect('users')
         return super().dispatch(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         response = super().delete(request, *args, **kwargs)
-        messages.success(request, 'Пользователь успешно удален')
+        messages.success(request, self.success_message)
         return response
