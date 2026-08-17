@@ -53,7 +53,7 @@ class UserLogoutView(View):
         messages.info(request, 'Вы разлогинены')
         return redirect('index')
 
-class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)):
+class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = User
     fields = ['first_name', 'last_name', 'username']
     template_name = 'users/update.html'
