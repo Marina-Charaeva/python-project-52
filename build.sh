@@ -2,20 +2,19 @@
 # build.sh
 set -o errexit
 
-# Python version
-python --version
+# Устанавливаем uv..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
 
-# Устанавливаем зависимости
-pip install --upgrade pip
-pip install -r requirements.txt
+# Устанавливаем зависимости через pчерез uv
+uv sync
 
-# Создаем директории
+#  Создаем директории
 mkdir -p staticfiles
 mkdir -p media
 
-# Создаем и применяем миграции
-python manage.py makemigrations --noinput
-python manage.py migrate --noinput
+# Применяем миграции
+uv run python manage.py migrate --noinput
 
 # Собираем статику
-python manage.py collectstatic --noinput
+uv run python manage.py collectstatic --noinput --clear
