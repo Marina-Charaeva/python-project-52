@@ -1,47 +1,25 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from .models import Status
 
-class CustomAuthenticationForm(AuthenticationForm):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({
-            'placeholder': _('Username'),
-            'class': 'form-control',
-            'autofocus': True
-        })
-        self.fields['password'].widget.attrs.update({
-            'placeholder': _('Password'),
-            'class': 'form-control'
-        })
-
-class CustomUserCreationForm(UserCreationForm):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({
-            'placeholder': _('Username'),
-            'class': 'form-control'
-        })
-        self.fields['password1'].widget.attrs.update({
-            'placeholder': _('Password'),
-            'class': 'form-control'
-        })
-        self.fields['password2'].widget.attrs.update({
-            'placeholder': _('Password confirmation'),
-            'class': 'form-control'
-        })
-        self.fields['first_name'].widget.attrs.update({
-            'placeholder': _('First name'),
-            'class': 'form-control'
-        })
-        self.fields['last_name'].widget.attrs.update({
-            'placeholder': _('Last name'),
-            'class': 'form-control'
-        })
-    
+class StatusForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'username', 'password1', 'password2']
+        model = Status
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': _('Name')
+            })
+        }
+    
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if Status.objects.filter(name__iexact=name).exists():
+            if self.instance and self.instance.pk:
+                if Status.objects.filter(name__iexact=name).exclude(pk=self.instance.pk).exists():
+                    raise ValidationError(_('Status with this name already exists'))
+            else:
+                raise ValidationError(_('Status with this name already exists'))
+        return name

@@ -1,0 +1,70 @@
+Полная проверка локально
+
+1. Активируйте виртуальное окружение
+source venv/bin/activate
+
+2. Проверьте, что все зависимости установлены
+bash
+# Проверьте установленные пакеты
+pip list
+
+# Убедитесь, что все пакеты из requirements.txt установлены
+pip install -r requirements.txt
+
+3. Проверьте переменные окружения
+bash
+# Проверьте, что .env.dev загружается
+python -c "
+from dotenv import load_dotenv
+import os
+load_dotenv('.env.dev')
+print('SECRET_KEY:', '✅ SET' if os.getenv('SECRET_KEY') else '❌ NOT SET')
+print('DEBUG:', os.getenv('DEBUG'))
+print('DATABASE_URL:', '✅ SET' if os.getenv('DATABASE_URL') else '❌ NOT SET')
+"
+
+4. Проверьте базу данных и миграции
+bash
+# Создайте миграции (если есть изменения)
+python manage.py makemigrations
+
+# Примените миграции
+python manage.py migrate
+
+# Проверьте, что таблицы созданы
+python manage.py showmigrations
+
+5. Проверьте код на ошибки
+bash
+# Проверьте проект на ошибки
+python manage.py check
+
+# Проверьте синтаксис всех файлов
+python -m py_compile task_manager/models.py
+python -m py_compile task_manager/views.py
+python -m py_compile task_manager/urls.py
+python -m py_compile task_manager/forms.py
+python -m py_compile task_manager/admin.py
+
+6. Запустите тесты
+bash
+# Запустите все тесты
+python manage.py test
+
+# Запустите тесты с подробным выводом
+python manage.py test -v 2
+
+# Запустите конкретные тесты
+python manage.py test task_manager.tests.test_statuses
+python manage.py test task_manager.tests.test_users
+
+
+7. Создайте суперпользователя (для теста)
+bash
+python manage.py createsuperuser
+# Введите: admin / admin123 / admin@example.com
+
+8. Запустите сервер и проверьте вручную
+bash
+# Запустите сервер
+python manage.py runserver
