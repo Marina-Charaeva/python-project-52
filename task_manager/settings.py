@@ -2,17 +2,37 @@ import os
 from pathlib import Path
 import environ
 import dj_database_url
-
-env = environ.Env()
-env.read_env()
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env('SECRET_KEY')
+IS_RENDER = os.getenv('RENDER', False)
 
-DEBUG = True
-ALLOWED_HOSTS = ['*']
-# DEBUG = env.bool('DEBUG', default=False)
+if IS_RENDER:
+    load_dotenv(BASE_DIR / '.env.prod')
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    load_dotenv(BASE_DIR / '.env.dev')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
+# DEBUG = True
+# ALLOWED_HOSTS = ['*']
 
 
 ALLOWED_HOSTS = [
@@ -67,22 +87,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
-
-# База данных
-if os.getenv('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
 
 # Пароли
 AUTH_PASSWORD_VALIDATORS = [

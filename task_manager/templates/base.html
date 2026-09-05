@@ -48,9 +48,12 @@
             <!-- Навигационное меню -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- Пользователи -->
+                    <!-- Пользователи и Статусы-->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users' %}">{% trans "Users" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'statuses' %}">{% trans "Statuses" %}</a>
                     </li>
                     
                     <!-- Вход/Выход и Регистрация -->
@@ -72,24 +75,6 @@
                             <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
                         </li>
                     {% endif %}
-                </ul>
-
-                <!-- Переключатель языка -->
-                <ul class="navbar-nav lang-switch">
-                    {% get_current_language as CURRENT_LANGUAGE %}
-                    {% get_available_languages as AVAILABLE_LANGUAGES %}
-                    {% for lang_code, lang_name in LANGUAGES %}
-                        <li class="nav-item">
-                            <form action="{% url 'set_language' %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <input name="next" type="hidden" value="{{ request.path }}">
-                                <input name="language" type="hidden" value="{{ lang_code }}">
-                                <button type="submit" class="nav-link btn btn-link {% if lang_code == CURRENT_LANGUAGE %}active{% endif %}" style="color: rgba(255,255,255,.55); text-decoration: none; padding: 0.25rem 0.5rem;">
-                                    {{ lang_name }}
-                                </button>
-                            </form>
-                        </li>
-                    {% endfor %}
                 </ul>
             </div>
         </div>
