@@ -7,15 +7,11 @@ from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-IS_RENDER = os.getenv('RENDER', False)
+env = environ.Env()
+env.read_env(BASE_DIR / '.env.dev')
 
-if IS_RENDER:
-    load_dotenv(BASE_DIR / '.env.prod')
-else:
-    load_dotenv(BASE_DIR / '.env.dev')
-
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 
 # DEBUG = True
