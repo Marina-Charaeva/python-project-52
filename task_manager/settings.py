@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import dj_database_url
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
+import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,15 +19,15 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 # ALLOWED_HOSTS = ['*']
 
 
-ALLOWED_HOSTS = [
-    'hexlet-code-nrjr.onrender.com',
-    '.onrender.com',
-    'webserver',
-    '127.0.0.1',
-    '0.0.0.0',
-    '.railway.app',
-    'localhost',
-]
+# ALLOWED_HOSTS = [
+#    'hexlet-code-nrjr.onrender.com',
+#    '.onrender.com',
+#    'webserver',
+#    '127.0.0.1',
+#    '0.0.0.0',
+#    '.railway.app',
+#    'localhost',
+#]
 
 # Application definition
 INSTALLED_APPS = [
@@ -78,7 +79,6 @@ if os.getenv('DATABASE_URL'):
         'default': dj_database_url.config(
             default=os.getenv('DATABASE_URL'),
             conn_max_age=600,
-            ssl_require=IS_RENDER  # SSL только на Render
         )
     }
 else:
